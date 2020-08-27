@@ -57,20 +57,22 @@ class BasicLayout extends React.Component {
 
   render() {
     return (
+      <div style={{padding: '1px 1px', height: '100%', backgroundColor: '#F0F2F5'}}>
       <Layout>
         <Header style={{textAlign: 'center'}}>
           <span style={{fontSize: '20px'}}>
-          知识页签<a href="https://github.com/FanFanJUN"><Icon type="github"></Icon></a>
+          知识页签<a href="https://github.com/FanFanJUN" target="_blank"><Icon type="github"></Icon></a>
           </span>
           </Header>
         <Content style={{height:'100%', overflowY: 'auto'}}>{this.props.children}</Content>
-        <Footer style={{ position: 'absolute', bottom: '0', width: '100%', height: '20px' }}>
+        <Footer style={{ bottom: '0', height: '10px', position: 'absolute',left: '0px', width : '100%' }}>
           <div style={{ textAlign: 'center' }}>
             <span>
               Copyright <Icon type="copyright" /> {new Date().getFullYear()} lcccc.com.cn
         </span></div>
         </Footer>
       </Layout>
+      </div>
     );
   }
 }

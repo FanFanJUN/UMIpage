@@ -18,4 +18,11 @@ const plugins = [
 export default {
     plugins,
     routes: pageRoutes,
+    "proxy": {
+      "/api": {
+        "target": "http://jsonplaceholder.typicode.com/",
+        "changeOrigin": true,
+        "pathRewrite": { "^/api" : "" }
+      }
+    }
   };
