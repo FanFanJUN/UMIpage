@@ -60,15 +60,19 @@ class BasicLayout extends React.Component {
       <div style={{padding: '1px 1px', height: '100%', backgroundColor: '#F0F2F5'}}>
       <Layout>
         <Header style={{textAlign: 'center'}}>
-          <span style={{fontSize: '20px'}}>
-          知识页签<a href="https://github.com/FanFanJUN" target="_blank"><Icon type="github"></Icon></a>
+          <span style={{fontSize: '20px', fontWeight: 'bold'}}>
+          知识页签
           </span>
+          <span>
+          <a href="https://github.com/FanFanJUN" target="_blank" style={{marginLeft: '10px'}} title="访问GitHub"><Icon type="github"></Icon></a>
+          </span>
+          <span>数风流人物，还看今朝！</span>
           </Header>
         <Content style={{height:'100%', overflowY: 'auto'}}>{this.props.children}</Content>
         <Footer style={{ bottom: '0', height: '10px', position: 'absolute',left: '0px', width : '100%' }}>
           <div style={{ textAlign: 'center' }}>
             <span>
-              Copyright <Icon type="copyright" /> {new Date().getFullYear()} lcccc.com.cn
+              Copyright <Icon type="copyright" /> {new Date().getFullYear()} created by UMI
         </span></div>
         </Footer>
       </Layout>
