@@ -1,3 +1,8 @@
+### 预览
+![image](https://github.com/FanFanJUN/UMIpage/blob/master/log.png)
+### 安装并启动
+- yarn install
+- npm start
 ### [UmiJS-可插拔的企业级 react 应用框架](https://umijs.org/zh/)
 
 - 插件化
