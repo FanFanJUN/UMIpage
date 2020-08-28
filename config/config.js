@@ -19,10 +19,11 @@ export default {
     plugins,
     routes: pageRoutes,
     "proxy": {
-      "/api": {
-        "target": "http://jsonplaceholder.typicode.com/",
+      "/api/lc": {
+        // "target": "http://192.168.1.214:20080",
+        "target": "http://120.55.81.129:9999/",
         "changeOrigin": true,
-        "pathRewrite": { "^/api" : "" }
+        // "pathRewrite": { "^/api/lc" : "" }
       }
     }
   };

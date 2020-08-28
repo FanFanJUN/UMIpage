@@ -4,7 +4,7 @@ export default [
     component: '../layouts',
     routes: [
       { path: '/', redirect: '/dashboard' },
-      { path: '/dashboard', component: './dashboard'},
+      { path: '/dashboard', component: './dashboard/index.js'},
     ],
   },
 ];

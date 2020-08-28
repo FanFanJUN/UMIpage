@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { List, Typography, Icon, Tag, Badge, Input } from 'antd';
 import request from 'umi-request';
+import { getDicOptions } from '../../util';
 
 const { CheckableTag } = Tag;
 const { Search } = Input;
@@ -67,17 +68,40 @@ class Dashboard extends React.Component {
 
   state = {
     selectedTags: [],
+    articles: [],
+    pagination: {},
   };
 
   componentDidMount() {
     request
-      .get('/api/users')
+      .post('/api/lc/SELECTLISTARTICLE', {
+        data: {
+          pageNum: 1,
+          pageSize: 10,
+          dicData: {},
+        },
+      })
       .then((response) => {
-        console.log(response);
+        const {data: {dataSource, pagination}} = response;
+        this.setState(()=>({
+          articles: dataSource,
+          pagination,
+        }))
       })
       .catch(function (error) {
         console.log(error);
       });
+
+      const dicparams = [
+        { dictionaryCategoryNo: 'article_category' },
+      ];
+
+      getDicOptions(dicparams).then(res=>{
+        console.log(res);
+        this.setState(()=>({
+          dicData: res.article_category || {},
+        }))
+      })
   }
   handleChange(tag, checked) {
     const { selectedTags } = this.state;
@@ -87,20 +111,20 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const { selectedTags } = this.state;
+    const { selectedTags, articles, pagination, dicData } = this.state;
     return (
       <Fragment>
         <div style={{ padding: '0px 18px', marginTop: '10px', width: '100%', marginBottom: '10px' }}>
           <span style={{ marginRight: 8 }}>类别:</span>
-          {tagsFromServer.map(tag => (
+          {dicData && dicData.map(tag => (
             <span style={{ marginRight: '10px' }}>
               <Badge count={6}>
                 <CheckableTag
                   key={tag}
-                  checked={selectedTags.indexOf(tag) > -1}
+                  checked={dicData.indexOf(tag.dictionaryNm) > -1}
                   onChange={checked => this.handleChange(tag, checked)}
                 >
-                  {tag}
+                  {tag.dictionaryNm}
                 </CheckableTag>
               </Badge>
             </span>
@@ -122,15 +146,15 @@ class Dashboard extends React.Component {
             onChange: page => {
               console.log(page);
             },
-            pageSize: 13,
+            ...pagination,
           }}
-          dataSource={pagesYums}
+          dataSource={articles}
           renderItem={(item, index) => (
             <List.Item
-              key={item.title}
-              actions={[<a key="list-loadmore-edit" href={item.href} target="_blank">查看</a>]}
+              key={item.articleTitle}
+              actions={[<a key="list-loadmore-edit" href={item.articleHref} target="_blank">查看</a>]}
             >
-              <Typography.Text mark>[{index}]</Typography.Text> {item.title}
+              <Typography.Text mark>[{index}]</Typography.Text> {item.articleTitle}
             </List.Item>
           )}
         />
