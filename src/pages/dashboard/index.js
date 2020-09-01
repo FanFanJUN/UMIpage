@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { List, Typography, Icon, Tag, Badge, Input } from 'antd';
 import request from 'umi-request';
-import { getDicOptions } from '../../util';
+import { getDicOptions, getDicNameByKey } from '../../util';
 
 const { CheckableTag } = Tag;
 const { Search } = Input;
@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
       getDicOptions(dicparams).then(res=>{
         console.log(res);
         this.setState(()=>({
-          dicData: res.article_category || {},
+          dicData: res || {},
         }))
       })
   }
@@ -116,13 +116,13 @@ class Dashboard extends React.Component {
       <Fragment>
         <div style={{ padding: '0px 18px', marginTop: '10px', width: '100%', marginBottom: '10px' }}>
           <span style={{ marginRight: 8 }}>类别:</span>
-          {dicData && dicData.map(tag => (
+          {dicData && dicData.article_category.map(tag => (
             <span style={{ marginRight: '10px' }}>
               <Badge count={6}>
                 <CheckableTag
                   key={tag}
-                  checked={dicData.indexOf(tag.dictionaryNm) > -1}
-                  onChange={checked => this.handleChange(tag, checked)}
+                  checked={selectedTags.length > 0 && selectedTags.indexOf(tag.dictionaryNm) > -1}
+                  onChange={checked => this.handleChange(tag.dictionaryNm, checked)}
                 >
                   {tag.dictionaryNm}
                 </CheckableTag>
@@ -154,7 +154,7 @@ class Dashboard extends React.Component {
               key={item.articleTitle}
               actions={[<a key="list-loadmore-edit" href={item.articleHref} target="_blank">查看</a>]}
             >
-              <Typography.Text mark>[{index}]</Typography.Text> {item.articleTitle}
+              <Typography.Text mark>[{getDicNameByKey(item.articleCategory,'article_category', dicData)}]</Typography.Text> {item.articleTitle}
             </List.Item>
           )}
         />
