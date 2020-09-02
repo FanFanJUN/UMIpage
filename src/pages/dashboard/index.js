@@ -72,6 +72,7 @@ class Dashboard extends React.Component {
     articles: [],
     pagination: {},
     articleNum: [],
+    dicData: {},
   };
 
   componentDidMount() {
@@ -139,7 +140,7 @@ class Dashboard extends React.Component {
             <span style={{ marginRight: '10px' }}>
               <Badge count={tag.totalTitel}>
                 <CheckableTag
-                  key={tag}
+                  key={tag.articleCategoryName}
                   checked={selectedTags.length > 0 && selectedTags.indexOf(tag.articleCategoryName) > -1}
                   onChange={checked => this.handleChange(tag.articleCategoryName, checked)}
                 >
@@ -152,7 +153,7 @@ class Dashboard extends React.Component {
           <Search
             placeholder="输入查询关键字"
             enterButton="搜索"
-            size="samll"
+            size="small"
             onSearch={value => console.log(value)}
           />
           </span>
