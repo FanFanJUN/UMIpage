@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { List, Typography, Icon, Tag, Badge, Input } from 'antd';
 import request from 'umi-request';
 import { getDicOptions, getDicNameByKey } from '../../util';
+import { getArticleNum } from '../../service/api';
 
 const { CheckableTag } = Tag;
 const { Search } = Input;
@@ -70,15 +71,36 @@ class Dashboard extends React.Component {
     selectedTags: [],
     articles: [],
     pagination: {},
+    articleNum: [],
   };
 
   componentDidMount() {
+      this.getDataSource({});
+      const dicparams = [
+        { dictionaryCategoryNo: 'article_category' },
+      ];
+
+      getDicOptions(dicparams).then(res=>{
+        console.log(res);
+        this.setState(()=>({
+          dicData: res || {},
+        }))
+      })
+
+      getArticleNum().then(res=> {
+        this.setState(()=>({
+          articleNum: res || [],
+        }))
+      })
+  }
+
+  getDataSource = (params)=> {
     request
       .post('/api/lc/SELECTLISTARTICLE', {
         data: {
           pageNum: 1,
           pageSize: 10,
-          dicData: {},
+          ...params,
         },
       })
       .then((response) => {
@@ -91,40 +113,37 @@ class Dashboard extends React.Component {
       .catch(function (error) {
         console.log(error);
       });
-
-      const dicparams = [
-        { dictionaryCategoryNo: 'article_category' },
-      ];
-
-      getDicOptions(dicparams).then(res=>{
-        console.log(res);
-        this.setState(()=>({
-          dicData: res || {},
-        }))
-      })
   }
   handleChange(tag, checked) {
-    const { selectedTags } = this.state;
+    const { selectedTags, dicData } = this.state;
     const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter(t => t !== tag);
     console.log('You are interested in: ', nextSelectedTags);
-    this.setState({ selectedTags: nextSelectedTags });
+    const allDic = dicData.article_category;
+    const params = allDic.filter(item=> {
+      return nextSelectedTags.includes(item.dictionaryNm);
+    }).map(item=>{
+      return item.dictionaryNo;
+    });
+    this.setState({ selectedTags: nextSelectedTags }, ()=>{
+      this.getDataSource({articleCategory: params.join(',')});
+    });
   }
 
   render() {
-    const { selectedTags, articles, pagination, dicData } = this.state;
+    const { selectedTags, articles, pagination, dicData, articleNum } = this.state;
     return (
       <Fragment>
         <div style={{ padding: '0px 18px', marginTop: '10px', width: '100%', marginBottom: '10px' }}>
           <span style={{ marginRight: 8 }}>类别:</span>
-          {dicData && dicData.article_category.map(tag => (
+          {articleNum.length > 0 && articleNum.map(tag => (
             <span style={{ marginRight: '10px' }}>
-              <Badge count={6}>
+              <Badge count={tag.totalTitel}>
                 <CheckableTag
                   key={tag}
-                  checked={selectedTags.length > 0 && selectedTags.indexOf(tag.dictionaryNm) > -1}
-                  onChange={checked => this.handleChange(tag.dictionaryNm, checked)}
+                  checked={selectedTags.length > 0 && selectedTags.indexOf(tag.articleCategoryName) > -1}
+                  onChange={checked => this.handleChange(tag.articleCategoryName, checked)}
                 >
-                  {tag.dictionaryNm}
+                  {tag.articleCategoryName}
                 </CheckableTag>
               </Badge>
             </span>
